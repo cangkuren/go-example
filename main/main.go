@@ -2,11 +2,13 @@ package main
 
 import (
 	"errors"
+	"golang.org/x/sync/singleflight"
 	"log"
 	"sync"
 )
 
 var errorNotExist = errors.New("not exist")
+var gsf singleflight.Group
 
 func main() {
 	var wg sync.WaitGroup
@@ -55,3 +57,24 @@ func getDataFromDB(key string) (string, error) {
 	log.Printf("get %s from database", key)
 	return "data", nil
 }
+
+//func getData(key string) (string, error) {
+//	data, err := getDataFromCache(key)
+//	if err == errorNotExist {
+//		//模拟从db中获取数据
+//		v, err, _ := gsf.Do(key, func() (interface{}, error) {
+//			return getDataFromDB(key)
+//			//set cache
+//		})
+//		if err != nil {
+//			log.Println(err)
+//			return "", err
+//		}
+//
+//		//TOOD: set cache
+//		data = v.(string)
+//	} else if err != nil {
+//		return "", err
+//	}
+//	return data, nil
+//}
